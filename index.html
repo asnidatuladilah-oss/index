@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TVET Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: #f7f8fa;
+    color: #1f2328;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 32px 16px 48px;
+  }
+
+  .dashboard {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f2328;
+    letter-spacing: -0.3px;
+  }
+  .header p {
+    color: #57606a;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  /* Cards row */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px 18px 16px;
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #57606a;
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-size: 34px;
+    font-weight: 700;
+    color: #1f2328;
+    line-height: 1.1;
+  }
+
+  .card-sub {
+    font-size: 12px;
+    color: #57606a;
+    margin-top: 6px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+  .badge-green  { background: #dcfce7; color: #166534; }
+  .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+  .badge-orange { background: #fff7ed; color: #c2410c; }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin-top: 10px;
+  }
+  .progress-bar-bg {
+    background: #e5e7eb;
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: #3b82d4;
+  }
+  .progress-label {
+    font-size: 11px;
+    color: #57606a;
+    margin-top: 4px;
+  }
+
+  /* Workshop status dots */
+  .workshop-list {
+    margin-top: 8px;
+    list-style: none;
+  }
+  .workshop-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #1f2328;
+    padding: 3px 0;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-green  { background: #22c55e; }
+  .dot-orange { background: #f97316; }
+  .dot-red    { background: #ef4444; }
+
+  /* Checklist panel */
+  .panel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px 20px 24px;
+  }
+
+  .panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2328;
+    margin-bottom: 4px;
+  }
+
+  .panel-subtitle {
+    font-size: 12px;
+    color: #57606a;
+    margin-bottom: 16px;
+  }
+
+  .checklist {
+    list-style: none;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0f1f3;
+    font-size: 13px;
+    color: #1f2328;
+  }
+  .checklist li:last-child { border-bottom: none; }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid #e5e7eb;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check-icon.done {
+    background: #3b82d4;
+    border-color: #3b82d4;
+  }
+  .check-icon.done svg { display: block; }
+  .check-icon svg { display: none; }
+
+  .check-text { flex: 1; }
+  .check-text.done-text {
+    text-decoration: line-through;
+    color: #57606a;
+  }
+
+  .check-meta {
+    font-size: 11px;
+    color: #57606a;
+    white-space: nowrap;
+    margin-top: 1px;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #57606a;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>TVET Dashboard</h1>
+    <p>Technical &amp; Vocational Education and Training — Overview</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="cards">
+
+    <!-- Students Card -->
+    <div class="card">
+      <div class="card-label">Students</div>
+      <div class="card-value">1,248</div>
+      <div class="card-sub">Enrolled this term</div>
+      <span class="badge badge-green">+12% this month</span>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:78%; background:#22c55e;"></div>
+        </div>
+        <div class="progress-label">78% attendance rate</div>
+      </div>
+    </div>
+
+    <!-- Tasks Card -->
+    <div class="card">
+      <div class="card-label">Tasks</div>
+      <div class="card-value">34</div>
+      <div class="card-sub">Active assignments</div>
+      <span class="badge badge-blue">18 completed</span>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:53%;"></div>
+        </div>
+        <div class="progress-label">53% completion rate</div>
+      </div>
+    </div>
+
+    <!-- Workshop Status Card -->
+    <div class="card">
+      <div class="card-label">Workshop Status</div>
+      <div class="card-value">6</div>
+      <div class="card-sub">Active workshops</div>
+      <ul class="workshop-list">
+        <li><span class="dot dot-green"></span>Welding Lab — Open</li>
+        <li><span class="dot dot-green"></span>ICT Centre — Open</li>
+        <li><span class="dot dot-orange"></span>Auto Repair — Partial</li>
+        <li><span class="dot dot-red"></span>Textile Room — Closed</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Checklist Panel -->
+  <div class="panel">
+    <div class="panel-title">Term Readiness Checklist</div>
+    <div class="panel-subtitle">Key actions before the new term begins</div>
+    <ul class="checklist">
+      <li>
+        <div class="check-icon done">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.8 7L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="check-text done-text">Enrol all new students into the system</span>
+        <span class="check-meta">Done</span>
+      </li>
+      <li>
+        <div class="check-icon done">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.8 7L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="check-text done-text">Assign instructors to all workshops</span>
+        <span class="check-meta">Done</span>
+      </li>
+      <li>
+        <div class="check-icon done">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.8 7L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="check-text done-text">Distribute learning materials &amp; toolkits</span>
+        <span class="check-meta">Done</span>
+      </li>
+      <li>
+        <div class="check-icon"></div>
+        <span class="check-text">Schedule mid-term practical assessments</span>
+        <span class="check-meta">Pending</span>
+      </li>
+      <li>
+        <div class="check-icon"></div>
+        <span class="check-text">Inspect and service workshop equipment</span>
+        <span class="check-meta">Pending</span>
+      </li>
+      <li>
+        <div class="check-icon"></div>
+        <span class="check-text">Submit term report to programme manager</span>
+        <span class="check-meta">Due: 30 Jul</span>
+      </li>
+      <li>
+        <div class="check-icon"></div>
+        <span class="check-text">Update student attendance registers</span>
+        <span class="check-meta">Due: Weekly</span>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>Made with IBM Bob</footer>
+</body>
+</html>
